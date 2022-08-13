@@ -140,9 +140,7 @@ docker image push ${AWS_ACCOUNT_ID}.dkr.ecr.ap-northeast-1.amazonaws.com/sbcntr-
 ## バックエンド確認
 ```
 curl http://internal-sbcntr-alb-internal-1598506546.ap-northeast-1.elb.amazonaws.com/v1/helloworld
-{"data":"Hello world"}
 curl http://internal-sbcntr-alb-internal-1598506546.ap-northeast-1.elb.amazonaws.com/v1/Notifications?id=1
-{"data":[{"id":1,"title":"通知1","description":"コンテナアプリケーションの作成の時間です。","category":"information","unread":true,"createdAt":"2022-08-13T05:57:14.925+09:00","updatedAt":"2022-08-13T05:57:14.925+09:00"}]}
 ab -n 1000000 -c 20 http://internal-sbcntr-alb-internal-1598506546.ap-northeast-1.elb.amazonaws.com/v1/Items
 ```
 

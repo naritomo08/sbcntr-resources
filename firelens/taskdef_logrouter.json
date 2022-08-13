@@ -4,9 +4,11 @@
   "containerDefinitions": [
       {
           "dnsSearchDomains": null,
-          "environmentFiles": [],
+          "environmentFiles": null,
           "logConfiguration": {
-              "logDriver": "awsfirelens"
+              "logDriver": "awsfirelens",
+              "secretOptions": null,
+              "options": null
           },
           "entryPoint": null,
           "portMappings": [
@@ -19,33 +21,34 @@
           "command": null,
           "linuxParameters": null,
           "cpu": 256,
-          "environment": null,
+          "environment": [],
           "resourceRequirements": null,
           "ulimits": null,
           "dnsServers": null,
-          "mountPoints": null,
+          "mountPoints": [],
           "workingDirectory": null,
           "secrets": [
               {
-                  "name": "DB_HOST",
-                  "valueFrom": "arn:aws:secretsmanager:ap-northeast-1:726046488087:secret:sbcntr2/mysql-8XglIq:host::"
+                  "valueFrom": "arn:aws:secretsmanager:ap-northeast-1:726046488087:secret:sbcntr2/mysql-8XglIq:host::",
+                  "name": "DB_HOST"
               },
               {
-                  "name": "DB_NAME",
-                  "valueFrom": "arn:aws:secretsmanager:ap-northeast-1:726046488087:secret:sbcntr2/mysql-8XglIq:dbname::"
+                  "valueFrom": "arn:aws:secretsmanager:ap-northeast-1:726046488087:secret:sbcntr2/mysql-8XglIq:dbname::",
+                  "name": "DB_NAME"
               },
               {
-                  "name": "DB_PASSWORD",
-                  "valueFrom": "arn:aws:secretsmanager:ap-northeast-1:726046488087:secret:sbcntr2/mysql-8XglIq:password::"
+                  "valueFrom": "arn:aws:secretsmanager:ap-northeast-1:726046488087:secret:sbcntr2/mysql-8XglIq:password::",
+                  "name": "DB_PASSWORD"
               },
               {
-                  "name": "DB_USERNAME",
-                  "valueFrom": "arn:aws:secretsmanager:ap-northeast-1:726046488087:secret:sbcntr2/mysql-8XglIq:username::"
+                  "valueFrom": "arn:aws:secretsmanager:ap-northeast-1:726046488087:secret:sbcntr2/mysql-8XglIq:username::",
+                  "name": "DB_USERNAME"
               }
           ],
           "dockerSecurityOptions": null,
+          "memory": null,
           "memoryReservation": 512,
-          "volumesFrom": null,
+          "volumesFrom": [],
           "stopTimeout": null,
           "image": "726046488087.dkr.ecr.ap-northeast-1.amazonaws.com/sbcntr-backend:60d4239",
           "startTimeout": null,
@@ -64,23 +67,30 @@
           "dockerLabels": null,
           "systemControls": null,
           "privileged": null,
-          "name": "app",
-          "repositoryCredentials": {
-              "credentialsParameter": ""
-          }
+          "name": "app"
       },
       {
-          "essential": true,
-          "image": "726046488087.dkr.ecr.ap-northeast-1.amazonaws.com/sbcntr-base:log-router",
-          "name": "log_router",
-          "firelensConfiguration": {
-              "type": "fluentbit",
+          "dnsSearchDomains": null,
+          "environmentFiles": null,
+          "logConfiguration": {
+              "logDriver": "awslogs",
+              "secretOptions": null,
               "options": {
-                  "config-file-type": "file",
-                  "config-file-value": "/fluent-bit/custom.conf"
+                  "awslogs-group": "/aws/ecs/sbcntr-firelens-container",
+                  "awslogs-region": "ap-northeast-1",
+                  "awslogs-stream-prefix": "firelens"
               }
           },
+          "entryPoint": null,
+          "portMappings": [],
+          "command": null,
+          "linuxParameters": null,
+          "cpu": 64,
           "environment": [
+              {
+                  "name": "LOG_BUCKET_NAME",
+                  "value": "sbcntr-726046488087"
+              },
               {
                   "name": "APP_ID",
                   "value": "backend-def"
@@ -94,38 +104,45 @@
                   "value": "ap-northeast-1"
               },
               {
-                  "name": "LOG_BUCKET_NAME",
-                  "value": "sbcntr-726046488087"
-              },
-              {
-                  "name": "LOG_BROUP_NAME",
+                  "name": "LOG_GROUP_NAME",
                   "value": "/aws/ecs/sbcntr-backend-def"
               }
           ],
-          "secrets": null,
           "resourceRequirements": null,
-          "portMappings": [],
-          "environmentFiles": [],
-          "mountPoints": null,
-          "volumesFrom": null,
-          "hostname": null,
-          "user": null,
+          "ulimits": null,
+          "dnsServers": null,
+          "mountPoints": [],
           "workingDirectory": null,
-          "extraHosts": null,
-          "logConfiguration": {
-              "logDriver": "awslogs",
+          "secrets": null,
+          "dockerSecurityOptions": null,
+          "memory": null,
+          "memoryReservation": 128,
+          "volumesFrom": [],
+          "stopTimeout": null,
+          "image": "726046488087.dkr.ecr.ap-northeast-1.amazonaws.com/sbcntr-base:log-router",
+          "startTimeout": null,
+          "firelensConfiguration": {
+              "type": "fluentbit",
               "options": {
-                  "awslogs-group": "/aws/ecs/sbcntr-firelens-container",
-                  "awslogs-region": "ap-northeast-1",
-                  "awslogs-stream-prefix": "firelens"
+                  "config-file-type": "file",
+                  "config-file-value": "/fluent-bit/custom.conf"
               }
           },
-          "ulimits": null,
-          "dockerLabels": null,
           "dependsOn": null,
-          "repositoryCredentials": {
-              "credentialsParameter": ""
-          }
+          "disableNetworking": null,
+          "interactive": null,
+          "healthCheck": null,
+          "essential": true,
+          "links": null,
+          "hostname": null,
+          "extraHosts": null,
+          "pseudoTerminal": null,
+          "user": "0",
+          "readonlyRootFilesystem": null,
+          "dockerLabels": null,
+          "systemControls": null,
+          "privileged": null,
+          "name": "log_router"
       }
   ],
   "memory": "1024",
@@ -141,6 +158,5 @@
   "inferenceAccelerators": [],
   "proxyConfiguration": null,
   "volumes": [],
-  "tags": [],
-  "placementConstraints": []
+  "tags": []
 }

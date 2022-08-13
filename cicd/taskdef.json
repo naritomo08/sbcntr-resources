@@ -1,5 +1,5 @@
 {
-  "executionRoleArn": "arn:aws:iam::[aws_account_id]:role/ecsTaskExecutionRole",
+  "executionRoleArn": "arn:aws:iam::726046488087:role/ecsTaskExecutionRole",
   "containerDefinitions": [
     {
       "logConfiguration": {
@@ -23,19 +23,19 @@
       "environment": [],
       "secrets": [
         {
-          "valueFrom": "arn:aws:secretsmanager:ap-northeast-1:[aws_account_id]:secret:[mysql_secret_alias]:host::",
+          "valueFrom": "arn:aws:secretsmanager:ap-northeast-1:726046488087:secret:sbcntr2/mysql-8XglIq:host::",
           "name": "DB_HOST"
         },
         {
-          "valueFrom": "arn:aws:secretsmanager:ap-northeast-1:[aws_account_id]:secret:[mysql_secret_alias]:dbname::",
+          "valueFrom": "arn:aws:secretsmanager:ap-northeast-1:726046488087:secret:sbcntr2/mysql-8XglIq:dbname::",
           "name": "DB_NAME"
         },
         {
-          "valueFrom": "arn:aws:secretsmanager:ap-northeast-1:[aws_account_id]:secret:[mysql_secret_alias]:password::",
+          "valueFrom": "arn:aws:secretsmanager:ap-northeast-1:726046488087:secret:sbcntr2/mysql-8XglIq:password::",
           "name": "DB_PASSWORD"
         },
         {
-          "valueFrom": "arn:aws:secretsmanager:ap-northeast-1:[aws_account_id]:secret:[mysql_secret_alias]:username::",
+          "valueFrom": "arn:aws:secretsmanager:ap-northeast-1:726046488087:secret:sbcntr2/mysql-8XglIq:username::",
           "name": "DB_USERNAME"
         }
       ],
