@@ -143,11 +143,14 @@ curl http://internal-sbcntr-alb-internal-1598506546.ap-northeast-1.elb.amazonaws
 {"data":"Hello world"}
 curl http://internal-sbcntr-alb-internal-1598506546.ap-northeast-1.elb.amazonaws.com/v1/Notifications?id=1
 {"data":[{"id":1,"title":"通知1","description":"コンテナアプリケーションの作成の時間です。","category":"information","unread":true,"createdAt":"2022-08-13T05:57:14.925+09:00","updatedAt":"2022-08-13T05:57:14.925+09:00"}]}
+ab -n 1000000 -c 20 http://internal-sbcntr-alb-internal-1598506546.ap-northeast-1.elb.amazonaws.com/v1/Items
 ```
 
 ## フロントエンド確認
 ```
 http://awsnaritomo.com/
+http://awsnaritomo.com?id="'hoge' or 'A'='A'"
+http://awsnaritomo.com?name="<script>alert(document.cookie)</script>"
 ```
 
 # DB設定
