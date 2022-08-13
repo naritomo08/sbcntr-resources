@@ -48,6 +48,7 @@ docker image rm -f $(docker image ls -q)
 
 ## dockerビルド
 ```
+cd /home/ec2-user/environment/sbcntr-backend
 docker image build -t sbcntr-backend:v1 .
 ```
 
@@ -107,7 +108,9 @@ docker ps
 
 ## dockerビルド
 ```
+cd /home/ec2-user/environment/sbcntr-frontend
 docker image build -t sbcntr-frontend:v1 .
+docker image build -t sbcntr-frontend:dbv1 .
 ```
 
 ## awsアカウントID取得
@@ -118,6 +121,7 @@ AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output text)
 ## イメージタグ修正
 ```
 docker image tag sbcntr-frontend:v1 ${AWS_ACCOUNT_ID}.dkr.ecr.ap-northeast-1.amazonaws.com/sbcntr-frontend:v1
+docker image tag sbcntr-frontend:dbv1 ${AWS_ACCOUNT_ID}.dkr.ecr.ap-northeast-1.amazonaws.com/sbcntr-frontend:dbv1
 ```
 
 ## Docker認証
@@ -128,4 +132,69 @@ aws ecr --region ap-northeast-1 get-login-password | docker login --username AWS
 ## ECRへのイメージ登録
 ```
 docker image push ${AWS_ACCOUNT_ID}.dkr.ecr.ap-northeast-1.amazonaws.com/sbcntr-frontend:v1
+docker image push ${AWS_ACCOUNT_ID}.dkr.ecr.ap-northeast-1.amazonaws.com/sbcntr-frontend:dbv1
+
+```
+
+# 稼働確認
+
+## バックエンド確認
+```
+curl http://internal-sbcntr-alb-internal-1598506546.ap-northeast-1.elb.amazonaws.com/v1/helloworld
+{"data":"Hello world"}
+curl http://internal-sbcntr-alb-internal-1598506546.ap-northeast-1.elb.amazonaws.com/v1/Notifications?id=1
+{"data":[{"id":1,"title":"通知1","description":"コンテナアプリケーションの作成の時間です。","category":"information","unread":true,"createdAt":"2022-08-13T05:57:14.925+09:00","updatedAt":"2022-08-13T05:57:14.925+09:00"}]}
+```
+
+## フロントエンド確認
+```
+http://awsnaritomo.com/
+```
+
+# DB設定
+
+## ユーザ/ロール作成
+```
+mysql -h sbcntr-db.cluster-cr5ewonryu9t.ap-northeast-1.rds.amazonaws.com -u admin -p5KBSJn8sUvPebhcBjLGi
+SELECT Host, User FROM mysql.user;
+CREATE USER sbcntruser@'%' IDENTIFIED BY 'sbcntrEncP';
+GRANT ALL ON sbcntrapp.* TO sbcntruser@'%' WITH GRANT OPTION;
+CREATE USER migrate@'%' IDENTIFIED BY 'sbcntrMigrate';
+GRANT ALL ON sbcntrapp.* TO migrate@'%' WITH GRANT OPTION;
+GRANT ALL ON `prisma_migrate_shadow_db%`.* TO migrate@'%' WITH GRANT OPTION;
+SELECT Host, User FROM mysql.user;
+```
+
+## テーブル確認
+```
+mysql -h sbcntr-db.cluster-cr5ewonryu9t.ap-northeast-1.rds.amazonaws.com -u sbcntruser -psbcntrEncP
+exit
+mysql -h sbcntr-db.cluster-cr5ewonryu9t.ap-northeast-1.rds.amazonaws.com -u migrate -psbcntrMigrate
+use sbcntrapp;
+show tables;
+exit;
+```
+
+## テーブル作成/データ投入
+```
+cd /home/ec2-user/environment/sbcntr-frontend
+git checkout main
+export DB_USERNAME=migrate
+export DB_PASSWORD=sbcntrMigrate
+export DB_HOST=sbcntr-db.cluster-cr5ewonryu9t.ap-northeast-1.rds.amazonaws.com
+export DB_NAME=sbcntrapp
+npm run migrate:dev
+
+? Name of migration → init
+
+npm run seed
+```
+
+## テーブル作成/データ投入確認
+```
+mysql -h sbcntr-db.cluster-cr5ewonryu9t.ap-northeast-1.rds.amazonaws.com -u sbcntruser -psbcntrEncP
+use sbcntrapp;
+show tables;
+select * from Notification;
+exit;
 ```
