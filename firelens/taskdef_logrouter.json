@@ -1,94 +1,146 @@
 {
-  "executionRoleArn": "arn:aws:iam::[aws_account_id]:role/ecsTaskExecutionRole",
+  "ipcMode": null,
+  "executionRoleArn": "arn:aws:iam::726046488087:role/ecsTaskExecutionRole",
   "containerDefinitions": [
-    {
-      "logConfiguration": {
-        "logDriver": "awsfirelens",
-        "secretOptions": null,
-        "options": null
+      {
+          "dnsSearchDomains": null,
+          "environmentFiles": [],
+          "logConfiguration": {
+              "logDriver": "awsfirelens"
+          },
+          "entryPoint": null,
+          "portMappings": [
+              {
+                  "hostPort": 80,
+                  "protocol": "tcp",
+                  "containerPort": 80
+              }
+          ],
+          "command": null,
+          "linuxParameters": null,
+          "cpu": 256,
+          "environment": null,
+          "resourceRequirements": null,
+          "ulimits": null,
+          "dnsServers": null,
+          "mountPoints": null,
+          "workingDirectory": null,
+          "secrets": [
+              {
+                  "name": "DB_HOST",
+                  "valueFrom": "arn:aws:secretsmanager:ap-northeast-1:726046488087:secret:sbcntr2/mysql-8XglIq:host::"
+              },
+              {
+                  "name": "DB_NAME",
+                  "valueFrom": "arn:aws:secretsmanager:ap-northeast-1:726046488087:secret:sbcntr2/mysql-8XglIq:dbname::"
+              },
+              {
+                  "name": "DB_PASSWORD",
+                  "valueFrom": "arn:aws:secretsmanager:ap-northeast-1:726046488087:secret:sbcntr2/mysql-8XglIq:password::"
+              },
+              {
+                  "name": "DB_USERNAME",
+                  "valueFrom": "arn:aws:secretsmanager:ap-northeast-1:726046488087:secret:sbcntr2/mysql-8XglIq:username::"
+              }
+          ],
+          "dockerSecurityOptions": null,
+          "memoryReservation": 512,
+          "volumesFrom": null,
+          "stopTimeout": null,
+          "image": "726046488087.dkr.ecr.ap-northeast-1.amazonaws.com/sbcntr-backend:60d4239",
+          "startTimeout": null,
+          "firelensConfiguration": null,
+          "dependsOn": null,
+          "disableNetworking": null,
+          "interactive": null,
+          "healthCheck": null,
+          "essential": true,
+          "links": null,
+          "hostname": null,
+          "extraHosts": null,
+          "pseudoTerminal": null,
+          "user": null,
+          "readonlyRootFilesystem": true,
+          "dockerLabels": null,
+          "systemControls": null,
+          "privileged": null,
+          "name": "app",
+          "repositoryCredentials": {
+              "credentialsParameter": ""
+          }
       },
-      "portMappings": [
-        {
-          "hostPort": 80,
-          "protocol": "tcp",
-          "containerPort": 80
-        }
-      ],
-      "cpu": 256,
-      "environment": [],
-      "secrets": [
-        {
-          "valueFrom": "arn:aws:secretsmanager:ap-northeast-1:[aws_account_id]:secret:[mysql_secret_alias]:host::",
-          "name": "DB_HOST"
-        },
-        {
-          "valueFrom": "arn:aws:secretsmanager:ap-northeast-1:[aws_account_id]:secret:[mysql_secret_alias]:dbname::",
-          "name": "DB_NAME"
-        },
-        {
-          "valueFrom": "arn:aws:secretsmanager:ap-northeast-1:[aws_account_id]:secret:[mysql_secret_alias]:password::",
-          "name": "DB_PASSWORD"
-        },
-        {
-          "valueFrom": "arn:aws:secretsmanager:ap-northeast-1:[aws_account_id]:secret:[mysql_secret_alias]:username::",
-          "name": "DB_USERNAME"
-        }
-      ],
-      "memory": null,
-      "memoryReservation": 512,
-      "image": "<IMAGE1_NAME>",
-      "readonlyRootFilesystem": true,
-      "essential": true,
-      "name": "app"
-    },
-    {
-      "logConfiguration": {
-        "logDriver": "awslogs",
-        "options": {
-          "awslogs-group": "/aws/ecs/sbcntr-firelens-container",
-          "awslogs-region": "ap-northeast-1",
-          "awslogs-stream-prefix": "firelens"
-        }
-      },
-      "cpu": 64,
-      "environment": [
-        {
-          "name": "APP_ID",
-          "value": "backend-def"
-        },
-        {
-          "name": "AWS_ACCOUNT_ID",
-          "value": "[aws_account_id]"
-        },
-        {
-          "name": "AWS_REGION",
-          "value": "ap-northeast-1"
-        },
-        {
-          "name": "LOG_BUCKET_NAME",
-          "value": "sbcntr-[aws_account_id]"
-        },
-        {
-          "name": "LOG_GROUP_NAME",
-          "value": "/aws/ecs/sbcntr-backend-def"
-        }
-      ],
-      "memoryReservation": 128,
-      "image": "[aws_account_id].dkr.ecr.ap-northeast-1.amazonaws.com/sbcntr-base:log-router",
-      "firelensConfiguration": {
-        "type": "fluentbit",
-        "options": {
-          "config-file-type": "file",
-          "config-file-value": "/fluent-bit/custom.conf"
-        }
-      },
-      "name": "log_router"
-    }
+      {
+          "essential": true,
+          "image": "726046488087.dkr.ecr.ap-northeast-1.amazonaws.com/sbcntr-base:log-router",
+          "name": "log_router",
+          "firelensConfiguration": {
+              "type": "fluentbit",
+              "options": {
+                  "config-file-type": "file",
+                  "config-file-value": "/fluent-bit/custom.conf"
+              }
+          },
+          "environment": [
+              {
+                  "name": "APP_ID",
+                  "value": "backend-def"
+              },
+              {
+                  "name": "AWS_ACCOUNT_ID",
+                  "value": "726046488087"
+              },
+              {
+                  "name": "AWS_REGION",
+                  "value": "ap-northeast-1"
+              },
+              {
+                  "name": "LOG_BUCKET_NAME",
+                  "value": "sbcntr-726046488087"
+              },
+              {
+                  "name": "LOG_BROUP_NAME",
+                  "value": "/aws/ecs/sbcntr-backend-def"
+              }
+          ],
+          "secrets": null,
+          "resourceRequirements": null,
+          "portMappings": [],
+          "environmentFiles": [],
+          "mountPoints": null,
+          "volumesFrom": null,
+          "hostname": null,
+          "user": null,
+          "workingDirectory": null,
+          "extraHosts": null,
+          "logConfiguration": {
+              "logDriver": "awslogs",
+              "options": {
+                  "awslogs-group": "/aws/ecs/sbcntr-firelens-container",
+                  "awslogs-region": "ap-northeast-1",
+                  "awslogs-stream-prefix": "firelens"
+              }
+          },
+          "ulimits": null,
+          "dockerLabels": null,
+          "dependsOn": null,
+          "repositoryCredentials": {
+              "credentialsParameter": ""
+          }
+      }
   ],
   "memory": "1024",
-  "taskRoleArn": null,
+  "taskRoleArn": "arn:aws:iam::726046488087:role/sbcntr-ecsTaskRole",
   "family": "sbcntr-backend-def",
-  "requiresCompatibilities": ["FARGATE"],
+  "pidMode": null,
+  "requiresCompatibilities": [
+      "FARGATE"
+  ],
   "networkMode": "awsvpc",
-  "cpu": "512"
+  "runtimePlatform": null,
+  "cpu": "512",
+  "inferenceAccelerators": [],
+  "proxyConfiguration": null,
+  "volumes": [],
+  "tags": [],
+  "placementConstraints": []
 }

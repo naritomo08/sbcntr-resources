@@ -11,7 +11,7 @@
         "s3:ListBucketMultipartUploads",
         "s3:PutObject"
       ],
-      "Resource": ["arn:aws:s3:::[bucket_name]", "arn:aws:s3:::[bucket_name]/*"]
+      "Resource": ["arn:aws:s3:::sbcntr-726046488087", "arn:aws:s3:::sbcntr-726046488087/*"]
     },
     {
       "Effect": "Allow",
