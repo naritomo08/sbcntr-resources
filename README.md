@@ -216,7 +216,7 @@ git commit -m 'cicd: pipelinetest'
 git push
 ```
 
-## basedockerリポジトリ設定1
+## basedockerリポジトリ設定1(golang)
 ```
 docker image pull golang:1.16.8-alpine3.13
 docker image ls
@@ -226,7 +226,7 @@ docker image tag golang:1.16.8-alpine3.13 ${AWS_ACCOUNT_ID}.dkr.ecr.ap-northeast
 docker image push ${AWS_ACCOUNT_ID}.dkr.ecr.ap-northeast-1.amazonaws.com/sbcntr-base:golang1.16.8-alpine3.13
 ```
 
-## basedockerリポジトリ設定2
+## basedockerリポジトリ設定2(log-router)
 ```
 cd /home/ec2-user/environment/base-logrouter
 docker image build -t sbcntr-log-router .
@@ -234,4 +234,14 @@ AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output text)
 aws ecr --region ap-northeast-1 get-login-password | docker login --username AWS --password-stdin https://${AWS_ACCOUNT_ID}.dkr.ecr.ap-northeast-1.amazonaws.com/sbcntr-base
 docker image tag sbcntr-log-router:latest ${AWS_ACCOUNT_ID}.dkr.ecr.ap-northeast-1.amazonaws.com/sbcntr-base:log-router
 docker image push ${AWS_ACCOUNT_ID}.dkr.ecr.ap-northeast-1.amazonaws.com/sbcntr-base:log-router
+```
+
+## basedockerリポジトリ設定3(bastion)
+```
+/home/ec2-user/environment/sbcntr-resources/fargate-bastion
+docker image build -t farget-bastion .
+AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output text)
+aws ecr --region ap-northeast-1 get-login-password | docker login --username AWS --password-stdin https://${AWS_ACCOUNT_ID}.dkr.ecr.ap-northeast-1.amazonaws.com/sbcntr-base
+docker image tag farget-bastion:latest ${AWS_ACCOUNT_ID}.dkr.ecr.ap-northeast-1.amazonaws.com/sbcntr-base:bastion
+docker image push ${AWS_ACCOUNT_ID}.dkr.ecr.ap-northeast-1.amazonaws.com/sbcntr-base:bastion
 ```
