@@ -197,3 +197,30 @@ show tables;
 select * from Notification;
 exit;
 ```
+
+## backendソースのコードプッシュ
+```
+cd /home/ec2-user/environment/sbcntr-backend
+git remote -v
+git remote set-url origin https://git-codecommit.ap-northeast-1.amazonaws.com/v1/repos/sbcntr-backend
+git remote -v
+git push
+```
+
+## git commitの流れ
+```
+git add .
+git status
+git commit -m 'cicd: pipelinetest'
+git push
+```
+
+## basedockerリポジトリ設定1
+```
+docker image pull golang:1.16.8-alpine3.13
+docker image ls
+AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output text)
+aws ecr --region ap-northeast-1 get-login-password | docker login --username AWS --password-stdin https://${AWS_ACCOUNT_ID}.dkr.ecr.ap-northeast-1.amazonaws.com/sbcntr-base
+docker image tag golang:1.16.8-alpine3.13 ${AWS_ACCOUNT_ID}.dkr.ecr.ap-northeast-1.amazonaws.com/sbcntr-base:golang1.16.8-alpine3.13
+docker image push ${AWS_ACCOUNT_ID}.dkr.ecr.ap-northeast-1.amazonaws.com/sbcntr-base:golang1.16.8-alpine3.13
+```
