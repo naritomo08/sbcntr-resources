@@ -29,3 +29,103 @@
 | scan            | 5-8 セキュリティ設計:  Trivy/Dockleによるセキュリティチェック                   | DevSecOpsを実現するためのCodeBuildのビルド定義を格納              |
 
 本書でPDFからコードをコピー＆ペーストしたり、写経するのが難しい場合がありますので、是非ご活用ください。
+
+## 20220813追記
+
+## docker操作
+
+# dockerイメージ確認
+```
+docker image ls
+```
+
+# dockerイメージ削除
+```
+docker image rm -f $(docker image ls -q)
+```
+
+## backendアプリビルド
+
+# dockerビルド
+```
+docker image build -t sbcntr-backend:v1 .
+```
+
+# awsアカウントID取得
+```
+AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output text)
+```
+
+# イメージタグ修正
+```
+docker image tag sbcntr-backend:v1 ${AWS_ACCOUNT_ID}.dkr.ecr.ap-northeast-1.amazonaws.com/sbcntr-backend:v1
+```
+
+# Docker認証
+```
+aws ecr --region ap-northeast-1 get-login-password | docker login --username AWS --password-stdin https://${AWS_ACCOUNT_ID}.dkr.ecr.ap-northeast-1.amazonaws.com/sbcntr-backend
+```
+
+# ECRへのイメージ登録
+```
+docker image push ${AWS_ACCOUNT_ID}.dkr.ecr.ap-northeast-1.amazonaws.com/sbcntr-backend:v1
+```
+
+## backend動確
+
+# dockerイメージ削除
+```
+docker image rm -f $(docker image ls -q)
+```
+
+# dockerイメージ取得
+```
+docker image pull ${AWS_ACCOUNT_ID}.dkr.ecr.ap-northeast-1.amazonaws.com/sbcntr-backend:v1
+```
+
+# docker コンテナ起動
+```
+docker container run -d -p 8080:80 ${AWS_ACCOUNT_ID}.dkr.ecr.ap-northeast-1.amazonaws.com/sbcntr-backend:v1
+```
+
+# リクエスト確認
+```
+date; curl http://localhost:8080/v1/helloworld
+
+結果:
+Sat Aug 13 03:45:13 UTC 2022
+{"data":"Hello world"}
+```
+
+# コンテナ停止
+```
+docker stop $(docker ps -q)
+docker ps
+```
+
+## frontendアプリビルド
+
+# dockerビルド
+```
+docker image build -t sbcntr-frontend:v1 .
+```
+
+# awsアカウントID取得
+```
+AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output text)
+```
+
+# イメージタグ修正
+```
+docker image tag sbcntr-frontend:v1 ${AWS_ACCOUNT_ID}.dkr.ecr.ap-northeast-1.amazonaws.com/sbcntr-frontend:v1
+```
+
+# Docker認証
+```
+aws ecr --region ap-northeast-1 get-login-password | docker login --username AWS --password-stdin https://${AWS_ACCOUNT_ID}.dkr.ecr.ap-northeast-1.amazonaws.com/sbcntr-frontend
+```
+
+# ECRへのイメージ登録
+```
+docker image push ${AWS_ACCOUNT_ID}.dkr.ecr.ap-northeast-1.amazonaws.com/sbcntr-frontend:v1
+```
