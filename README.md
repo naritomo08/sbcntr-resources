@@ -133,7 +133,6 @@ aws ecr --region ap-northeast-1 get-login-password | docker login --username AWS
 ```
 docker image push ${AWS_ACCOUNT_ID}.dkr.ecr.ap-northeast-1.amazonaws.com/sbcntr-frontend:v1
 docker image push ${AWS_ACCOUNT_ID}.dkr.ecr.ap-northeast-1.amazonaws.com/sbcntr-frontend:dbv1
-
 ```
 
 # 稼働確認
